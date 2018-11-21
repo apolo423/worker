@@ -70,6 +70,13 @@ class App extends Component<AppProps> {
 
     const socket = io.connect(address, { secure: true, transports: ['websocket'] });
     const currentToken = localStorage.getItem('Token');
+    const currentToken = localStorage.getItem('Token');
+    socket.on('connect', (_socket) => {
+      socket
+        .on('authenticated', () => { notificationStore.getNotifications({}); console.log('socket connected'); })
+        .on('notifications', (message) => this.notificationReceived(message))
+        .emit('authenticate', { token: currentToken ? JSON.parse(currentToken) : '' });
+    });
     socket.on('connect', (_socket) => {
       socket
         .on('authenticated', () => { notificationStore.getNotifications({}); console.log('socket connected'); })
